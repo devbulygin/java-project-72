@@ -14,3 +14,6 @@ clean-install:
 lint:
 	./gradlew checkstyleMain checkstyleTest
 .PHONY: build
+
+report:
+	./gradlew jacocoTestReport
