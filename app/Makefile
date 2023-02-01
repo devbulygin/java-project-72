@@ -17,3 +17,6 @@ lint:
 
 report:
 	./gradlew jacocoTestReport
+
+start:
+	APP_ENV=development ./gradlew run
