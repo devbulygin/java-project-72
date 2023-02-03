@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'jacoco'
+    id 'io.ebean' version '12.15.1'
 }
 
 group 'hexlet.code'
@@ -20,6 +21,21 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation("io.javalin:javalin:5.3.2")
     implementation("org.slf4j:slf4j-simple:2.0.6")
+
+    implementation 'io.ebean:ebean:12.15.1'
+    implementation 'io.ebean:ebean-ddl-generator:12.15.1'
+    implementation 'io.ebean:ebean-querybean:12.15.1'
+    implementation 'io.ebean:ebean-migration:12.15.1'
+    implementation 'io.ebean:ebean-annotation:7.7'
+    annotationProcessor 'io.ebean:querybean-generator:12.15.1'
+
+
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+
+//    implementation group: 'org.postgresql', name: 'postgresql', version: 42.5.2
 }
 
 test {
@@ -36,3 +52,9 @@ jacocoTestReport {
         html.required = true
     }
 }
+
+task generateMigrations(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'hexlet.code.MigrationGenerator'
+}
+

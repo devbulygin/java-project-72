@@ -1,0 +1,16 @@
+ebean:
+  migration:
+    run: true
+
+datasource:
+
+
+  db:
+    username: ""
+    password: ""
+    url: "jdbc:h2:./hexlet"
+
+other:
+  username: "testbase_ujlu_user"
+  password: "5cekh5uKflTlbaE0mRr8cE3SlbxLLhWP"
+  url: "jdbc:postgres://testbase_ujlu_user:5cekh5uKflTlbaE0mRr8cE3SlbxLLhWP@dpg-cfdvvt1a6gdhmg1ram7g-a/testbase_ujlu"
