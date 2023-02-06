@@ -1,11 +1,17 @@
 package hexlet.code.Controllers;
 
-import java.io.PrintWriter;
 import io.javalin.http.Handler;
 
 public class RootController {
     public static Handler welcome = ctx -> {
-        PrintWriter printWriter = ctx.res().getWriter();
-        printWriter.write("Hello, world");
+        try {
+            ctx.attribute("status", "Javalin и Thymeleaf работают");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ctx.render("templates/index.html");
     };
+
+
+
 }
