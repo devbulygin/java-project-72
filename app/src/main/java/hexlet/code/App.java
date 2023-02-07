@@ -52,7 +52,7 @@ public class App {
         TemplateEngine templateEngine = new TemplateEngine();
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/resources/templates/");
+        templateResolver.setPrefix("/templates/");
 
         templateEngine.addTemplateResolver(templateResolver);
         templateEngine.addDialect(new LayoutDialect());
