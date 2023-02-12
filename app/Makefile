@@ -20,3 +20,6 @@ report:
 
 start:
 	APP_ENV=development ./gradlew run
+
+generate-migrations:
+	./gradlew generateMigrations

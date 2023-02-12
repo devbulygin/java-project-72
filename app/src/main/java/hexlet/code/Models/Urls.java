@@ -1,5 +1,6 @@
 package hexlet.code.Models;
 
+import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 
 import javax.persistence.Entity;
@@ -7,13 +8,31 @@ import javax.persistence.Id;
 import java.time.Instant;
 
 @Entity
-public class Urls {
+public class Urls extends Model {
     private String name;
-    private String createdAt;
     @Id
     private Long id;
 
     @WhenCreated
-    private Instant whenCreated;
+    private Instant createdAt;
 
+    public Urls() {
+    }
+
+    public Urls(String name) {
+
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }
