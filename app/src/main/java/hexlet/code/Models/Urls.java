@@ -14,7 +14,7 @@ public class Urls extends Model {
     private Long id;
 
     @WhenCreated
-    private Instant createdAt;
+    private Instant whenCreated;
 
     public Urls() {
     }
@@ -32,7 +32,7 @@ public class Urls extends Model {
         return id;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public Instant getWhenCreated() {
+        return whenCreated;
     }
 }
