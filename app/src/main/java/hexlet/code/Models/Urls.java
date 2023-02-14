@@ -24,13 +24,25 @@ public class Urls extends Model {
         this.name = name;
     }
 
+    /**
+     this method returns name field.
+     @return the URL String in database
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     this method returns id field.
+     @return the id URL in database, in Long
+     */
     public Long getId() {
         return id;
     }
+
+    /**
+     this method returns created date field.
+     @return the date and time when the URL was created, in ISO 8601 format
+     */
 
     public Instant getWhenCreated() {
         return whenCreated;

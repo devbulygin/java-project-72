@@ -7,7 +7,11 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 class AppTest {
@@ -61,7 +65,7 @@ class AppTest {
             String url = "https://ru.hexlet.io/teams";
             String correctUrl = "https://ru.hexlet.io";
 
-            HttpResponse<String> responseURL= Unirest
+            HttpResponse<String> responseURL = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", url)
                     .asEmpty();
@@ -89,7 +93,7 @@ class AppTest {
             String url = "https://github.com";
             String correctUrl = "https://github.com";
 
-            HttpResponse<String> responseURL= Unirest
+            HttpResponse<String> responseURL = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", url)
                     .asEmpty();
@@ -115,7 +119,7 @@ class AppTest {
         void testCreateWithError() {
             String url = "site";
 
-            HttpResponse<String> responseURL= Unirest
+            HttpResponse<String> responseURL = Unirest
                     .post(baseUrl + "/urls")
                     .field("url", url)
                     .asEmpty();
