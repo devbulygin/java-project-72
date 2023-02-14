@@ -4,7 +4,6 @@
         <createTable name="urls" pkName="pk_urls">
             <column name="id" type="bigint" primaryKey="true"/>
             <column name="name" type="varchar"/>
-            <column name="created_at" type="varchar"/>
             <column name="when_created" type="timestamp" notnull="true"/>
         </createTable>
     </changeSet>

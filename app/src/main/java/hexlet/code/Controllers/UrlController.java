@@ -30,7 +30,7 @@ public class UrlController {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.attribute("url", receivedUrl);
-            ctx.render("/");
+            ctx.redirect("/");
             return;
         }
 

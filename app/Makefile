@@ -1,3 +1,6 @@
+start:
+	APP_ENV=development ./gradlew run
+
 clean:
 	./gradlew clean
 
@@ -18,8 +21,7 @@ lint:
 report:
 	./gradlew jacocoTestReport
 
-start:
-	APP_ENV=development ./gradlew run
+
 
 generate-migrations:
 	./gradlew generateMigrations

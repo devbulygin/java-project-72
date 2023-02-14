@@ -24,15 +24,15 @@ public class Urls extends Model {
         this.name = name;
     }
 
-    final String getName() {
+    public String getName() {
         return name;
     }
 
-    final Long getId() {
+    public Long getId() {
         return id;
     }
 
-    final Instant getWhenCreated() {
+    public Instant getWhenCreated() {
         return whenCreated;
     }
 }
