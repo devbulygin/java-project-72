@@ -6,6 +6,7 @@ ebean:
     migration:
       run: true
 datasource:
+    development:
     db:
         username: ""
         password: ""
