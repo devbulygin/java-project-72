@@ -52,18 +52,18 @@ public class App {
         return app;
     }
 
-        private static TemplateEngine getTemplateEngine() {
-            TemplateEngine templateEngine = new TemplateEngine();
+    private static TemplateEngine getTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
 
-            ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-            templateResolver.setPrefix("/templates/");
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("/templates/");
 
-            templateEngine.addTemplateResolver(templateResolver);
-            templateEngine.addDialect(new LayoutDialect());
-            templateEngine.addDialect(new Java8TimeDialect());
+        templateEngine.addTemplateResolver(templateResolver);
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
 
-            return templateEngine;
-        }
+        return templateEngine;
+    }
 
     private static void addRoutes(Javalin app) {
         app.get("/", RootController.welcome);
