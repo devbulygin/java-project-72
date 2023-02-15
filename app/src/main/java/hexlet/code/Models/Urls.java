@@ -11,7 +11,7 @@ import java.time.Instant;
 public class Urls extends Model {
     private String name;
     @Id
-    private Long id;
+    private long id;
 
     @WhenCreated
     private Instant whenCreated;
@@ -35,7 +35,7 @@ public class Urls extends Model {
      this method returns id field.
      @return the id URL in database, in Long
      */
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
