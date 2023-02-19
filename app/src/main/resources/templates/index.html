@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/application.html}">
-
-<section layout:fragment="content">
+<section layout:fragment="header">
     <h1 class="display-3">Анализатор страниц</h1>
-
+</section>
+<section layout:fragment="content">
     <form action="/urls" method="post">
         <div class="mb-3">
-            <label for="url" class="form-label">Анализатор страниц</label>
-            <p class="lead">
-                Бесплатно проверьте свои сайты на SEO пригодность
-            </p>
+            <label for="url" class="form-label">Бесплатно проверьте свои сайты на SEO пригодность</label>
             <input type="text" class="form-control" id="url" name="url">
         </div>
 

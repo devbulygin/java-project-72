@@ -12,9 +12,11 @@
     <thead>
     <tr>
         <th class="col-1">ID</th>
-        <th class="col-3">URL</th>
+        <th class="col-2">URL</th>
 
-        <th class="col-2">Дата создания</th>
+        <th class="col-3">Последняя проверка</th>
+        <th class="col-4">Код ответа</th>
+
     </tr>
     </thead>
     <tbody>
@@ -24,7 +26,16 @@
             <a th:href="@{/urls/{id}(id=*{getId()})}" th:text="${#strings.abbreviate(urls.getName(), 30)}"></a>
         </td>
 
-        <td th:text="${#temporals.format(urls.getWhenCreated(), 'dd/MM/yyyy HH:mm')}"></td>
+        <td>
+            <span th:if="${#lists.size(urls.checks) > 0}" th:text="${#temporals.format(urls.checks[urls.checks.size() - 1].whenCreated, 'dd/MM/yyyy HH:mm')}"></span>
+            <span th:if="${#lists.size(urls.checks) == 0}">Нет проверок</span>
+        </td>
+
+        <td>
+            <span th:if="${#lists.size(urls.checks) > 0}" th:text="${urls.checks[urls.checks.size() - 1].statusCode}"></span>
+            <span th:if="${#lists.size(urls.checks) == 0}">Нет проверок</span>
+        </td>
+
     </tr>
     </tbody>
 </table>

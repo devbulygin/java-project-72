@@ -7,13 +7,18 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
 class AppTest {
     @Test
     void testInit() {
@@ -24,6 +29,15 @@ class AppTest {
     private static String baseUrl;
     private static Urls existingUrl;
     private static Database database;
+    private static MockWebServer server;
+
+    private static String mockUrl;
+
+
+    @BeforeAll
+    static void setup() throws IOException {
+        server = new MockWebServer();
+    }
 
 
     @BeforeAll
@@ -45,10 +59,14 @@ class AppTest {
         database.script().run("/truncate.sql");
         database.script().run("/seed-test-db.sql");
     }
+    @AfterEach
+    void afterEach() throws IOException {
+
+        server.shutdown();
+    }
 
 
     @Nested
-
     class RootTest {
         @Test
         void testIndex() {
@@ -145,5 +163,24 @@ class AppTest {
 //            assertThat(body).contains("https://github.com");
 //        }
     }
-
+//    @Test
+//    void availabilityTest() throws IOException {
+//        mockUrl = server.url("/").toString();
+//
+//        server.enqueue(new MockResponse().setBody("hello, world!"));
+//
+//        server.start();
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//    }
 }
