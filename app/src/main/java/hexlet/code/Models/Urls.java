@@ -53,11 +53,20 @@ public class Urls extends Model {
         return whenCreated;
     }
 
+    /**
+     this method returns created List of checks.
+     @return the List
+     */
     public List<UrlCheck> getChecks() {
         return checks;
     }
+    /**
+     this method add check url in check.
 
-    public void addCheck(UrlCheck check){
+     @param check add UrlCheck object after urlCheck operation.
+     */
+
+    public void addCheck(UrlCheck check) {
         checks.add(check);
     }
 }

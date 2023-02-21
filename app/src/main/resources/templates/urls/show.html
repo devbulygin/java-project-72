@@ -36,13 +36,20 @@
     <thead>
     <tr>
       <th class="col-1">ID</th>
-      <th class="col-2">Дата проверки</th>
+      <th class="col-2">Код ответа</th>
+      <th class="col-3">title</th>
+      <th class="col-4">h1</th>
+      <th class="col-5">description</th>
+      <th class="col-6">Дата проверки</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="checks : ${checks}" th:object="${checks}">
       <td th:text="*{getId()}"></td>
-
+      <td th:text="*{getStatusCode()}"></td>
+      <td th:text="*{getTitle()}"></td>
+      <td th:text="*{getH1()}"></td>
+      <td th:text="*{getDescription()}"></td>
       <td th:text="${#temporals.format(checks.getWhenCreated(), 'dd/MM/yyyy HH:mm')}"></td>
     </tr>
     </tbody>

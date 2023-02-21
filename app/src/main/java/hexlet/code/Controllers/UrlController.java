@@ -10,6 +10,9 @@ import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -110,17 +113,44 @@ public class UrlController {
         Urls url = new QUrls()
                 .id.equalTo(id)
                 .findOne();
+        String title = new String();
+        String h1 = new String();
+        String description = new String();
+
+
         try {
             HttpResponse<JsonNode> response = Unirest.get(url.getName()).asJson();
 
             int statusCode = response.getStatus();
 
+            Document document = Jsoup.connect(url.getName()).get();
+            Element titleElement = document.selectFirst("title");
+            Element h1Element = document.selectFirst("h1");
+            Element metaElement = document.selectFirst("meta[name=description][content]");
+            if (titleElement != null) {
+                title = document.title();
+            } else {
+                title = "Тег title не найден";
+            }
 
-//        String title = response.getStatusText();
-//        String h1 = response.ge;
-//        String description = ;
+            if (h1Element != null) {
+                h1 = document.selectFirst("h1").text();
+            } else {
+                h1 = "Тег h1 не найден";
+            }
 
-            UrlCheck check = new UrlCheck(statusCode, url);
+            if (metaElement != null) {
+                description = document.selectFirst("meta[name=description][content]").text();
+            } else {
+                description = "Тег  <meta name=\"description\" content=\"...\">  не найден";
+            }
+
+
+
+
+
+            UrlCheck check = new UrlCheck(statusCode, title, h1, description, url);
+
             url.addCheck(check);
 
             url.save();
