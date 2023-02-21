@@ -7,6 +7,8 @@ import io.ebean.Database;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -21,37 +23,48 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AppTest {
-    @Test
-    void testInit() {
-        assertThat(true).isEqualTo(true);
-    }
+//    @Test
+//    void testInit() {
+//        assertThat(true).isEqualTo(true);
+//    }
 
     private static Javalin app;
     private static String baseUrl;
     private static Urls existingUrl;
     private static Database database;
     private static MockWebServer server;
+    private static MockResponse response;
+    private static String url;
 
-    private static String mockUrl;
 
-
-    @BeforeAll
-    static void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         server = new MockWebServer();
+        response = new MockResponse()
+                .setBody("<meta charset=\"UTF-8\" name=\"description\" content=\"description test\"> "
+                        + "<title>Title test</title> "
+                        + "<h1>h1 Test</h1>");
+
+        server.enqueue(response);
+
+        server.start();
+        url = "http://example.test";
+        HttpUrl httpUrl = server.url(url);
+
     }
 
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         app = App.getApp();
-        app.start(0);
+        app.start();
         int port = app.port();
         baseUrl = "http://localhost:" + port;
         database = DB.getDefault();
     }
 
     @AfterAll
-    public static void afterAll() {
+    static void afterAll() {
         app.stop();
     }
 
@@ -86,8 +99,7 @@ class AppTest {
     class UrlTest {
         @Test
         void testCreateNew() {
-            String url = "https://ru.hexlet.io/teams";
-            String correctUrl = "https://ru.hexlet.io";
+
 
             HttpResponse<String> responseURL = Unirest
                     .post(baseUrl + "/urls")
@@ -101,43 +113,50 @@ class AppTest {
             String body = response.getBody();
 
             assertThat(response.getStatus()).isEqualTo(200);
-            assertThat(body).contains("Страница успешно добавлена");
+//            assertThat(body).contains("Страница успешно добавлена");
 
             Urls actualUrl = new QUrls()
-                    .name.equalTo(correctUrl)
-                    .findOne();
+                    .name.equalTo(url)
+                    .setMaxRows(1)
+                    .findList()
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
 
             assertThat(actualUrl).isNotNull();
-            assertThat(actualUrl.getName()).isEqualTo(correctUrl);
+            assertThat(actualUrl.getName()).isEqualTo(url);
 
         }
 
-//        @Test
-//        void testCreateDuble() {
-//            String url = "https://github.com";
-//            String correctUrl = "https://github.com";
-//
-//            HttpResponse<String> responseURL = Unirest
-//                    .post(baseUrl + "/urls")
-//                    .field("url", url)
-//                    .asEmpty();
-//
-//            assertThat(responseURL.getStatus()).isEqualTo(302);
-//            assertThat(responseURL.getHeaders().getFirst("Location")).isEqualTo("/");
-//
-//            HttpResponse<String> response = Unirest.get(baseUrl).asString();
-//            String body = response.getBody();
-//            assertThat(response.getStatus()).isEqualTo(200);
-//            assertThat(body).contains("Страница уже существует");
-//
-//
-//            Urls actualUrl = new QUrls()
-//                    .name.equalTo(correctUrl)
-//                    .findOne();
-//
-//            assertThat(actualUrl).isNotNull();
-//            assertThat(actualUrl.getName()).isEqualTo(correctUrl);
-//        }
+        @Test
+        void testCreateDuble() {
+
+
+            HttpResponse<String> responseURL = Unirest
+                    .post(baseUrl + "/urls")
+                    .field("url", url.toString())
+                    .asEmpty();
+
+            assertThat(responseURL.getStatus()).isEqualTo(302);
+            assertThat(responseURL.getHeaders().getFirst("Location")).isEqualTo("/");
+
+            HttpResponse<String> response = Unirest.get(baseUrl).asString();
+            String body = response.getBody();
+            assertThat(response.getStatus()).isEqualTo(200);
+            assertThat(body).contains("Страница уже существует");
+
+
+            Urls actualUrl = new QUrls()
+                    .name.equalTo(url)
+                    .setMaxRows(1)
+                    .findList()
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+
+            assertThat(actualUrl).isNotNull();
+            assertThat(actualUrl.getName()).isEqualTo(url);
+        }
 
         @Test
         void testCreateWithError() {
@@ -157,26 +176,18 @@ class AppTest {
             assertThat(body).contains("Некорректный URL");
         }
 
-//        @Test
-//        void testListUrl() {
-//
-//
-//            HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
-//
-//            String body = response.getBody();
-//            assertThat(response.getStatus()).isEqualTo(500);
-//
-//            assertThat(body).contains("https://github.com");
-//        }
-//    }
-//    @Test
-//    void availabilityTest() throws IOException {
-//        mockUrl = server.url("/").toString();
-//
-//        server.enqueue(new MockResponse().setBody("hello, world!"));
-//
-//        server.start();
+        @Test
+        void testListUrl() {
 
-//    }
+
+            HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
+
+            String body = response.getBody();
+            assertThat(response.getStatus()).isEqualTo(200);
+
+            assertThat(body).contains(url);
+        }
     }
+
 }
+

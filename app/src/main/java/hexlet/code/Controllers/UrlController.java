@@ -145,10 +145,6 @@ public class UrlController {
                 description = "Тег  <meta name=\"description\" content=\"...\">  не найден";
             }
 
-
-
-
-
             UrlCheck check = new UrlCheck(statusCode, title, h1, description, url);
 
             url.addCheck(check);
