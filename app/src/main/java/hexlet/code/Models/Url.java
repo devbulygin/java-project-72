@@ -16,7 +16,7 @@ public class Url extends Model {
     private long id;
 
     @WhenCreated
-    private Instant whenCreated;
+    private Instant created_at;
 
     @OneToMany(mappedBy = "url")
     private List<UrlCheck> checks;
@@ -50,8 +50,8 @@ public class Url extends Model {
      * @return the date and time when the URL was created, in ISO 8601 format
      */
 
-    public Instant getWhenCreated() {
-        return whenCreated;
+    public Instant getCreated_at() {
+        return created_at;
     }
 
     /**
