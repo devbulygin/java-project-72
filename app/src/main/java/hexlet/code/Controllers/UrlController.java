@@ -163,6 +163,15 @@ public class UrlController {
             ctx.sessionAttribute("flash", "Превышено время запроса");
             ctx.sessionAttribute("flash-type", "alert");
             ctx.redirect("/urls/" + id);
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", "Соединение не установлено");
+            ctx.sessionAttribute("flash-type", "alert");
+            ctx.redirect("/urls/" + id);
+//            throw new RuntimeException("Соединение не установлено");
+//        } catch (ConnectException connectException) {
+//            ctx.sessionAttribute("flash", "Соединение не установлено");
+//            ctx.sessionAttribute("flash-type", "alert");
+//            ctx.redirect("/urls/" + id);
         }
 
     };
