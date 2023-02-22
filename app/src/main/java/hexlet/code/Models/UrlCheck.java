@@ -16,7 +16,7 @@ public class UrlCheck extends Model {
     private long id;
 
     @WhenCreated
-    private Instant whenCreated;
+    private Instant createdAt;
 
     private int statusCode;
 
@@ -56,8 +56,8 @@ public class UrlCheck extends Model {
      *
      * @return the date and time when the URL was created, in ISO 8601 format
      */
-    public Instant getWhenCreated() {
-        return whenCreated;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
     /**

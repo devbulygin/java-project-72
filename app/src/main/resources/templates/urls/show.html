@@ -22,7 +22,7 @@
     <tr th:each="url : ${url}" th:object="${url}">
       <td th:text="|Дата создания|"></td>
 
-      <td th:text="${#temporals.format(url.getCreated_at(), 'dd/MM/yyyy HH:mm')}"></td>
+      <td th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
     </tr>
 
   </table>
@@ -50,7 +50,7 @@
       <td th:text="*{getTitle()}"></td>
       <td th:text="*{getH1()}"></td>
       <td th:text="*{getDescription()}"></td>
-      <td th:text="${#temporals.format(checks.getWhenCreated(), 'dd/MM/yyyy HH:mm')}"></td>
+      <td th:text="${#temporals.format(checks.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
     </tr>
     </tbody>
   </table>

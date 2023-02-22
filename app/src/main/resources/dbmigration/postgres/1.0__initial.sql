@@ -13,7 +13,7 @@ create table url_check (
   h1                            varchar(255),
   description                   text,
   url_id                        bigint not null,
-  when_created                  timestamptz not null,
+  created_at                    timestamptz not null,
   constraint pk_url_check primary key (id)
 );
 

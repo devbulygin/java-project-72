@@ -1,4 +1,4 @@
 INSERT INTO urls
-  (name, when_created)
+  (name, created_at)
 VALUES
   ('https://github.com', CURRENT_TIMESTAMP);
