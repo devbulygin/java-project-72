@@ -29,12 +29,12 @@ public class UrlCheck extends Model {
 
     @ManyToOne
     @NotNull
-    private Urls url;
+    private Url url;
 
     public UrlCheck() {
     }
 
-    public UrlCheck(int statusCode, String title, String h1, String description, Urls url) {
+    public UrlCheck(int statusCode, String title, String h1, String description, Url url) {
         this.statusCode = statusCode;
         this.title = title;
         this.h1 = h1;
@@ -102,7 +102,7 @@ public class UrlCheck extends Model {
      * @return Urls object
      */
 
-    public Urls getUrl() {
+    public Url getUrl() {
         return url;
     }
 

@@ -1,4 +1,4 @@
-INSERT INTO urls
+INSERT INTO url
   (name, when_created)
 VALUES
   ('http://example.test', CURRENT_TIMESTAMP);

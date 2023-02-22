@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-public class Urls extends Model {
+public class Url extends Model {
     private String name;
     @Id
     private long id;
@@ -21,10 +21,10 @@ public class Urls extends Model {
     @OneToMany(mappedBy = "url")
     private List<UrlCheck> checks;
 
-    public Urls() {
+    public Url() {
     }
 
-    public Urls(String name) {
+    public Url(String name) {
 
         this.name = name;
     }

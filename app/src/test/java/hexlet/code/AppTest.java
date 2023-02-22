@@ -1,7 +1,8 @@
 package hexlet.code;
 
-import hexlet.code.Models.Urls;
-import hexlet.code.Models.query.QUrls;
+
+import hexlet.code.Models.Url;
+import hexlet.code.Models.query.QUrl;
 import io.ebean.DB;
 import io.ebean.Database;
 import io.javalin.Javalin;
@@ -30,7 +31,7 @@ class AppTest {
 
     private static Javalin app;
     private static String baseUrl;
-    private static Urls existingUrl;
+    private static Url existingUrl;
     private static Database database;
     private static MockWebServer server;
     private static MockResponse response;
@@ -115,7 +116,7 @@ class AppTest {
             assertThat(response.getStatus()).isEqualTo(200);
 //            assertThat(body).contains("Страница успешно добавлена");
 
-            Urls actualUrl = new QUrls()
+            Url actualUrl = new QUrl()
                     .name.equalTo(url)
                     .setMaxRows(1)
                     .findList()
@@ -146,7 +147,7 @@ class AppTest {
             assertThat(body).contains("Страница уже существует");
 
 
-            Urls actualUrl = new QUrls()
+            Url actualUrl = new QUrl()
                     .name.equalTo(url)
                     .setMaxRows(1)
                     .findList()

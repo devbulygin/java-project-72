@@ -1,9 +1,9 @@
 package hexlet.code.Controllers;
 
 
+import hexlet.code.Models.Url;
 import hexlet.code.Models.UrlCheck;
-import hexlet.code.Models.Urls;
-import hexlet.code.Models.query.QUrls;
+import hexlet.code.Models.query.QUrl;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
@@ -33,7 +33,7 @@ public class UrlController {
         URL url = new URL(receivedUrl);
         String formattedURL = url.getProtocol() + "://" + url.getAuthority();
 
-        if (new QUrls().name.equalTo(formattedURL).exists()) {
+        if (new QUrl().name.equalTo(formattedURL).exists()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.attribute("url", receivedUrl);
@@ -41,7 +41,7 @@ public class UrlController {
             return;
         }
 
-        Urls newUrl = new Urls(formattedURL);
+        Url newUrl = new Url(formattedURL);
         newUrl.save();
         ctx.sessionAttribute("flash", "Страница успешно добавлена");
         ctx.sessionAttribute("flash-type", "success");
@@ -65,7 +65,7 @@ public class UrlController {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
-        PagedList<Urls> pagedUrls = new QUrls()
+        PagedList<Url> pagedUrls = new QUrl()
 //                .name.icontains(term)
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
@@ -73,7 +73,7 @@ public class UrlController {
                 .id.asc()
                 .findPagedList();
 
-        List<Urls> urls = pagedUrls.getList();
+        List<Url> urls = pagedUrls.getList();
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;
@@ -94,7 +94,7 @@ public class UrlController {
 
     public static Handler showUrl = ctx -> {
         int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
-        Urls url = new QUrls()
+        Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
 
@@ -110,7 +110,7 @@ public class UrlController {
 
     public static Handler checkUrl = ctx -> {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
-        Urls url = new QUrls()
+        Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
         String title = new String();
