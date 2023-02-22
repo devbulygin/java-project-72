@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,6 +114,7 @@ public class UrlController {
         Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
+
         String title = new String();
         String h1 = new String();
         String description = new String();
@@ -152,12 +154,13 @@ public class UrlController {
             url.save();
             check.save();
 
-            ctx.sessionAttribute("flash", "Проверка выполнена");
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
-            ctx.redirect("/urls/" + id);
+            ctx.render("/urls/" + id);
 
-        } catch (Exception e) {
-            ctx.sessionAttribute("flash", "Ошибка");
+        } catch (SocketTimeoutException timeException) {
+
+            ctx.sessionAttribute("flash", "Превышено время запроса");
             ctx.sessionAttribute("flash-type", "alert");
             ctx.redirect("/urls/" + id);
         }
