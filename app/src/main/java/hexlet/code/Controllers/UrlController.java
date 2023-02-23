@@ -8,14 +8,13 @@ import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -121,28 +120,30 @@ public class UrlController {
 
 
         try {
-            HttpResponse<JsonNode> response = Unirest.get(url.getName()).asJson();
+            System.out.println("url to parse: " + url.getName());
+            HttpResponse<String> response = Unirest.get(url.getName()).asString();
+            Document doc = Jsoup.parse(response.getBody());
 
             int statusCode = response.getStatus();
 
-            Document document = Jsoup.connect(url.getName()).get();
-            Element titleElement = document.selectFirst("title");
-            Element h1Element = document.selectFirst("h1");
-            Element metaElement = document.selectFirst("meta[name=description][content]");
+            Document document = Jsoup.connect(url.getName()).timeout(10 * 1000).get();
+            Element titleElement = doc.selectFirst("title");
+            Element h1Element = doc.selectFirst("h1");
+            Element metaElement = doc.selectFirst("meta[name=description][content]");
             if (titleElement != null) {
-                title = document.title();
+                title = doc.title();
             } else {
                 title = "Тег title не найден";
             }
 
             if (h1Element != null) {
-                h1 = document.selectFirst("h1").text();
+                h1 = doc.selectFirst("h1").text();
             } else {
                 h1 = "Тег h1 не найден";
             }
 
             if (metaElement != null) {
-                description = document.selectFirst("meta[name=description][content]").text();
+                description = doc.selectFirst("meta[name=description][content]").text();
             } else {
                 description = "Тег  <meta name=\"description\" content=\"...\">  не найден";
             }
@@ -158,21 +159,13 @@ public class UrlController {
             ctx.sessionAttribute("flash-type", "success");
             ctx.render("/urls/" + id);
 
-        } catch (SocketTimeoutException timeException) {
-
-            ctx.sessionAttribute("flash", "Превышено время запроса");
-            ctx.sessionAttribute("flash-type", "alert");
-            ctx.redirect("/urls/" + id);
-        } catch (Exception e) {
-            ctx.sessionAttribute("flash", "Соединение не установлено");
-            ctx.sessionAttribute("flash-type", "alert");
-            ctx.redirect("/urls/" + id);
-//            throw new RuntimeException("Соединение не установлено");
-//        } catch (ConnectException connectException) {
-//            ctx.sessionAttribute("flash", "Соединение не установлено");
-//            ctx.sessionAttribute("flash-type", "alert");
-//            ctx.redirect("/urls/" + id);
-        }
+         } catch (UnirestException e) {
+        ctx.sessionAttribute("flash", "Некорректный адрес");
+        ctx.sessionAttribute("flash-type", "alert");
+    } catch (Exception e) {
+        ctx.sessionAttribute("flash", e.getMessage());
+        ctx.sessionAttribute("flash-type", "alert");
+    }
 
     };
 }
