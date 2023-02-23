@@ -31,7 +31,7 @@ public class UrlController {
             return;
         }
         URL url = new URL(receivedUrl);
-        String formattedURL = url.getProtocol()+ "://" + url.getAuthority();
+        String formattedURL = url.getProtocol() + "://" + url.getAuthority();
 
         if (new QUrl().name.equalTo(formattedURL).exists()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
