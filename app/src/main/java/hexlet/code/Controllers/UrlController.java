@@ -159,13 +159,13 @@ public class UrlController {
             ctx.sessionAttribute("flash-type", "success");
             ctx.render("/urls/" + id);
 
-         } catch (UnirestException e) {
-        ctx.sessionAttribute("flash", "Некорректный адрес");
-        ctx.sessionAttribute("flash-type", "alert");
-    } catch (Exception e) {
-        ctx.sessionAttribute("flash", e.getMessage());
-        ctx.sessionAttribute("flash-type", "alert");
-    }
+        } catch (UnirestException e) {
+            ctx.sessionAttribute("flash", "Некорректный адрес");
+            ctx.sessionAttribute("flash-type", "alert");
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", e.getMessage());
+            ctx.sessionAttribute("flash-type", "alert");
+        }
 
     };
 }
