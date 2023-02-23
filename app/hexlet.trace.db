@@ -731,3 +731,6 @@ ALTER TABLE URL CHANGE WHEN_CREATED CREATED_AT [42001-214]
 2023-02-22 22:07:45 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE URL RENAME [*]WHEN_CREATED CREATED_AT"; expected "COLUMN, CONSTRAINT, TO"; SQL statement:
 ALTER TABLE URL RENAME WHEN_CREATED CREATED_AT [42001-214]
+2023-02-23 17:37:18 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]""SELECT * FROM url WHERE name = 'URL ;"""; SQL statement:
+"SELECT * FROM url WHERE name = 'URL ;" [42000-214]

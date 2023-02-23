@@ -31,7 +31,7 @@ public class UrlController {
             return;
         }
         URL url = new URL(receivedUrl);
-        String formattedURL = url.getProtocol() + "://" + url.getAuthority();
+        String formattedURL = url.getProtocol()+ "://" + url.getAuthority();
 
         if (new QUrl().name.equalTo(formattedURL).exists()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
@@ -114,58 +114,37 @@ public class UrlController {
                 .id.equalTo(id)
                 .findOne();
 
-        String title = new String();
-        String h1 = new String();
-        String description = new String();
-
+//        String title = new String();
+//        String h1 = new String();
+//        String description = new String();
 
         try {
-            System.out.println("url to parse: " + url.getName());
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
             Document doc = Jsoup.parse(response.getBody());
 
             int statusCode = response.getStatus();
-
-            Document document = Jsoup.connect(url.getName()).timeout(10 * 1000).get();
-            Element titleElement = doc.selectFirst("title");
+            String title = doc.title();
             Element h1Element = doc.selectFirst("h1");
-            Element metaElement = doc.selectFirst("meta[name=description][content]");
-            if (titleElement != null) {
-                title = doc.title();
-            } else {
-                title = "Тег title не найден";
-            }
+            String h1 = h1Element == null ? "" : h1Element.text();
+            Element descriptionElement = doc.selectFirst("meta[name=description]");
+            String description = descriptionElement == null ? "" : descriptionElement.attr("content");
 
-            if (h1Element != null) {
-                h1 = doc.selectFirst("h1").text();
-            } else {
-                h1 = "Тег h1 не найден";
-            }
-
-            if (metaElement != null) {
-                description = doc.selectFirst("meta[name=description][content]").text();
-            } else {
-                description = "Тег  <meta name=\"description\" content=\"...\">  не найден";
-            }
-
-            UrlCheck check = new UrlCheck(statusCode, title, h1, description, url);
-
-            url.addCheck(check);
-
+            UrlCheck newUrlCheck = new UrlCheck(statusCode, title, h1, description, url);
+            url.getChecks().add(newUrlCheck);
             url.save();
-            check.save();
 
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
-            ctx.render("/urls/" + id);
-
         } catch (UnirestException e) {
             ctx.sessionAttribute("flash", "Некорректный адрес");
-            ctx.sessionAttribute("flash-type", "alert");
+            ctx.sessionAttribute("flash-type", "danger");
         } catch (Exception e) {
             ctx.sessionAttribute("flash", e.getMessage());
-            ctx.sessionAttribute("flash-type", "alert");
+            ctx.sessionAttribute("flash-type", "danger");
         }
+
+        ctx.redirect("/urls/" + url.getId());
+
 
     };
 }
