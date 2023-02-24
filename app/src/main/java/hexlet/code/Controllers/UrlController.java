@@ -130,8 +130,10 @@ public class UrlController {
             String description = descriptionElement == null ? "" : descriptionElement.attr("content");
 
             UrlCheck newUrlCheck = new UrlCheck(statusCode, title, h1, description, url);
-            url.getChecks().add(newUrlCheck);
+            url.addCheck(newUrlCheck);
+            newUrlCheck.save();
             url.save();
+
 
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
