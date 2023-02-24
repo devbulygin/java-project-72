@@ -104,7 +104,7 @@ class AppTest {
     }
 
     @AfterAll
-    static void afterAll() throws IOException{
+    static void afterAll() throws IOException {
 
         app.stop();
         server.shutdown();
