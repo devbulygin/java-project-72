@@ -14,24 +14,27 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class UrlController {
+
     public static Handler createUrl = ctx -> {
         String receivedUrl = ctx.formParam("url");
 
-        if (!isValidURL(receivedUrl)) {
+        URL parsedUrl;
+        try {
+            parsedUrl = new URL(receivedUrl);
+        } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.redirect("/");
             return;
         }
-        URL url = new URL(receivedUrl);
-        String formattedURL = url.getProtocol() + "://" + url.getAuthority();
+
+        String formattedURL = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
 
         if (new QUrl().name.equalTo(formattedURL).exists()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
@@ -50,23 +53,13 @@ public class UrlController {
     };
 
 
-    static boolean isValidURL(String receivedUrl) throws MalformedURLException {
-        try {
-            new URL(receivedUrl);
-            return true;
-        } catch (MalformedURLException e) {
-            return false;
-        }
-    }
-
     public static Handler listUrls = ctx -> {
 
-//        String term = ctx.queryParamAsClass("term", String.class).getOrDefault("");
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1) - 1;
         int rowsPerPage = 10;
 
         PagedList<Url> pagedUrls = new QUrl()
-//                .name.icontains(term)
+
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
                 .orderBy()
@@ -84,11 +77,9 @@ public class UrlController {
                 .collect(Collectors.toList());
 
         ctx.attribute("urls", urls);
-//        ctx.attribute("term", term);
         ctx.attribute("pages", pages);
         ctx.attribute("currentPage", currentPage);
         ctx.render("urls/index.html");
-
 
     };
 
@@ -114,9 +105,10 @@ public class UrlController {
                 .id.equalTo(id)
                 .findOne();
 
-//        String title = new String();
-//        String h1 = new String();
-//        String description = new String();
+        if (url == null) {
+            ctx.sessionAttribute("flash", "URL не найден");
+            ctx.sessionAttribute("flash-type", "danger");
+        }
 
         try {
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
@@ -146,7 +138,5 @@ public class UrlController {
         }
 
         ctx.redirect("/urls/" + url.getId());
-
-
     };
 }
