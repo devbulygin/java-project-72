@@ -59,7 +59,6 @@ public class UrlController {
         int rowsPerPage = 10;
 
         PagedList<Url> pagedUrls = new QUrl()
-
                 .setFirstRow(page * rowsPerPage)
                 .setMaxRows(rowsPerPage)
                 .orderBy()
@@ -87,6 +86,9 @@ public class UrlController {
         int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
         Url url = new QUrl()
                 .id.equalTo(id)
+                .checks.fetch()
+                .orderBy()
+                .checks.createdAt.desc()
                 .findOne();
 
         if (url == null) {
@@ -106,8 +108,7 @@ public class UrlController {
                 .findOne();
 
         if (url == null) {
-            ctx.sessionAttribute("flash", "URL не найден");
-            ctx.sessionAttribute("flash-type", "danger");
+            throw new NotFoundResponse();
         }
 
         try {
