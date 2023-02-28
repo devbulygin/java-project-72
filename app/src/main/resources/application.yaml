@@ -1,46 +1,40 @@
-#datasource:
-#    default: ${APP_ENV}
-#    development:
-#            username: ""
-#            password: ""
-#            url: "jdbc:h2:./hexlet"
-#    production:
-#        username: ${JDBC_DATABASE_USERNAME}
-#        password: ${JDBC_DATABASE_PASSWORD}
-#        url: ${JDBC_DATABASE_URL}
-#
-#ebean:
-#    ddl:
-#        run: true
-#        generate: true
-#        seedSql: seed.sql
-#     migration:
-#       run: true
-
-
-
-
-
-
-
-
-
-
-
-ebean:
-    development:
-        migration:
-            run: true
-    production:
-        migration:
-            run: true
 datasource:
+    default: ${APP_ENV}
     development:
-    db:
-        username: ""
-        password: ""
-        url: "jdbc:h2:./hexlet"
+        username: sa
+        password: sa
+        url: "jdbc:h2:./database"
     production:
         username: ${JDBC_DATABASE_USERNAME}
         password: ${JDBC_DATABASE_PASSWORD}
         url: ${JDBC_DATABASE_URL}
+
+ebean:
+    migration:
+        run: true
+
+
+
+
+
+
+
+
+
+#ebean:
+#    development:
+#        migration:
+#            run: true
+#    production:
+#        migration:
+#            run: true
+#datasource:
+#    development:
+#    db:
+#        username: ""
+#        password: ""
+#        url: "jdbc:h2:./hexlet"
+#    production:
+#        username: ${JDBC_DATABASE_USERNAME}
+#        password: ${JDBC_DATABASE_PASSWORD}
+#        url: ${JDBC_DATABASE_URL}

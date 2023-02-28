@@ -32,7 +32,7 @@
         </td>
 
         <td>
-            <span th:if="${#lists.size(urls.checks) > 0}" th:text="${urls.checks[urls.checks.size() - 1].statusCode}"></span>
+            <span th:if="${#lists.size(urls.checks) > 0}" th:text="${urls.checks[0].statusCode}"></span>
             <span th:if="${#lists.size(urls.checks) == 0}">Нет проверок</span>
         </td>
 
