@@ -27,7 +27,7 @@
         </td>
 
         <td>
-            <span th:if="${not #lists.isEmpty(urls.checks)}" th:text="${#temporals.format(urls.checks[urls.checks.size() - 1].createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+            <span th:if="${not #lists.isEmpty(urls.checks)}" th:text="${#temporals.format(urls.checks[0].createdAt, 'dd/MM/yyyy HH:mm')}"></span>
             <span th:if="${#lists.isEmpty(urls.checks)}">Нет проверок</span>
         </td>
 
