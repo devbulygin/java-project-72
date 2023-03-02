@@ -1,7 +1,7 @@
 INSERT INTO url
   (name, created_at)
 VALUES
-  ('http://example.test', CURRENT_TIMESTAMP);
+  ('http://github.com', CURRENT_TIMESTAMP);
 
 INSERT INTO url_check
 	(status_code, title, h1, description, url_id, created_at)

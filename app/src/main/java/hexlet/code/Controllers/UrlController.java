@@ -4,6 +4,7 @@ package hexlet.code.Controllers;
 import hexlet.code.Models.Url;
 import hexlet.code.Models.UrlCheck;
 import hexlet.code.Models.query.QUrl;
+import hexlet.code.Models.query.QUrlCheck;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
@@ -16,6 +17,7 @@ import org.jsoup.nodes.Element;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -66,6 +68,12 @@ public class UrlController {
                 .findPagedList();
 
         List<Url> urls = pagedUrls.getList();
+        Map<Long, UrlCheck> urlChecks = new QUrlCheck()
+                .url.id.asMapKey()
+                .orderBy()
+                .createdAt.desc()
+                .findMap();
+
 
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;
@@ -76,6 +84,7 @@ public class UrlController {
                 .collect(Collectors.toList());
 
         ctx.attribute("urls", urls);
+        ctx.attribute("urlChecks", urlChecks);
         ctx.attribute("pages", pages);
         ctx.attribute("currentPage", currentPage);
         ctx.render("urls/index.html");

@@ -4,7 +4,6 @@ package hexlet.code;
 import hexlet.code.Models.Url;
 import hexlet.code.Models.query.QUrl;
 import io.ebean.DB;
-import io.ebean.Database;
 import io.ebean.SqlRow;
 import io.ebean.Transaction;
 import io.javalin.Javalin;
@@ -34,13 +33,7 @@ class AppTest {
 
     private static Javalin app;
     private static String baseUrl;
-    private static Url existingUrl;
-
-    private static SqlRow existingUrlRow;
-    private static SqlRow existingUrlRowCheck;
-    private static Database database;
     private static MockWebServer server;
-    private static MockResponse response;
     private static String testUrl;
 
     private static Transaction transaction;
@@ -74,33 +67,7 @@ class AppTest {
         app.start();
         int port = app.port();
         baseUrl = "http://localhost:" + port;
-
-
-        testUrl = "http://test.com";
-        String createUrl = String.format(
-                "INSERT INTO url (name, created_at) VALUES ('%s', '2021-09-27 14:20:19.13');",
-                testUrl
-        );
-        DB.sqlUpdate(createUrl).execute();
-
-        String selectUrl = String.format("SELECT * FROM url WHERE name = '%s';", testUrl);
-        existingUrlRow = DB.sqlQuery(selectUrl).findOne();
-
-        String createUrlCheck = String.format(
-                "INSERT INTO url_check (url_id, status_code, title, description, h1, created_at)"
-                        + "VALUES (%s, 200, 'en title', 'en description', 'en h1', '2021-09-27 14:20:19.13');",
-                existingUrlRow.getString("id")
-        );
-
-        DB.sqlUpdate(createUrlCheck).execute();
-
-        String selectUrlCheck = String.format(
-                "SELECT * FROM url_check WHERE url_id = '%s';",
-                existingUrlRow.getString("id")
-        );
-        existingUrlRowCheck = DB.sqlQuery(selectUrlCheck).findOne();
-
-
+        testUrl = "https://github.com";
     }
 
     @AfterAll
@@ -109,8 +76,6 @@ class AppTest {
         app.stop();
         server.shutdown();
     }
-
-
 
     @BeforeEach
     void beforeEach() {
@@ -121,11 +86,11 @@ class AppTest {
     void afterEach() {
         transaction.rollback();
     }
-
     @Nested
     class RootTest {
         @Test
         void testIndex() {
+
             HttpResponse<String> response = Unirest.get(baseUrl).asString();
             assertThat(response.getStatus()).isEqualTo(200);
             assertThat(response.getBody()).contains("Анализатор страниц");
@@ -137,46 +102,43 @@ class AppTest {
 
         @Test
         void testIndex() {
+
             HttpResponse<String> response = Unirest
                     .get(baseUrl + "/urls")
                     .asString();
             String body = response.getBody();
 
             assertThat(response.getStatus()).isEqualTo(200);
-            assertThat(body).contains(existingUrlRow.getString("name"));
-            assertThat(body).contains(existingUrlRowCheck.getString("status_code"));
+            assertThat(body).contains("http://github.com");
+            assertThat(body).contains("200");
         }
 
         @Test
         void testShow() {
+
             HttpResponse<String> response = Unirest
-                    .get(baseUrl + "/urls/" + existingUrlRow.getString("id"))
+                    .get(baseUrl + "/urls" + "/1")
                     .asString();
             String body = response.getBody();
 
             assertThat(response.getStatus()).isEqualTo(200);
-            assertThat(body).contains(existingUrlRow.getString("name"));
-            assertThat(body).contains(existingUrlRowCheck.getString("status_code"));
+            assertThat(body).contains("http://github.com");
+            assertThat(body).contains("200");
+            assertThat(body).contains("best platform");
+
         }
 
 
         @Test
-        void testCreateDuble() {
-
+        void testCreateDouble() {
 
             HttpResponse<String> responseURL = Unirest
                     .post(baseUrl + "/urls")
-                    .field("url", testUrl.toString())
+                    .field("url", testUrl)
                     .asEmpty();
 
             assertThat(responseURL.getStatus()).isEqualTo(302);
-            assertThat(responseURL.getHeaders().getFirst("Location")).isEqualTo("/");
-
-            HttpResponse<String> response = Unirest.get(baseUrl).asString();
-            String body = response.getBody();
-            assertThat(response.getStatus()).isEqualTo(200);
-            assertThat(body).contains("Страница уже существует");
-
+            assertThat(responseURL.getHeaders().getFirst("Location")).isEqualTo("/urls");
 
             Url actualUrl = new QUrl()
                     .name.equalTo(testUrl)
@@ -192,6 +154,7 @@ class AppTest {
 
         @Test
         void testCreateWithError() {
+
             String url = "site";
 
             HttpResponse<String> responseURL = Unirest
@@ -211,13 +174,12 @@ class AppTest {
         @Test
         void testListUrl() {
 
-
             HttpResponse<String> response = Unirest.get(baseUrl + "/urls").asString();
 
             String body = response.getBody();
             assertThat(response.getStatus()).isEqualTo(200);
 
-            assertThat(body).contains(testUrl);
+            assertThat(body).contains("https://github.com");
         }
     }
 
