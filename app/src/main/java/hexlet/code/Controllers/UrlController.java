@@ -74,7 +74,6 @@ public class UrlController {
                 .createdAt.desc()
                 .findMap();
 
-
         int lastPage = pagedUrls.getTotalPageCount() + 1;
         int currentPage = pagedUrls.getPageIndex() + 1;
 

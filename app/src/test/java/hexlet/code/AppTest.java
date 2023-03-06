@@ -2,7 +2,9 @@ package hexlet.code;
 
 
 import hexlet.code.Models.Url;
+import hexlet.code.Models.UrlCheck;
 import hexlet.code.Models.query.QUrl;
+import hexlet.code.Models.query.QUrlCheck;
 import io.ebean.DB;
 import io.ebean.SqlRow;
 import io.ebean.Transaction;
@@ -194,34 +196,34 @@ class AppTest {
                     .field("url", url)
                     .asEmpty();
 
-            String selectUrl = String.format("SELECT * FROM url WHERE name = '%s';", url);
-            SqlRow actualUrl = DB.sqlQuery(selectUrl).findOne();
+            Url actualUrl = new QUrl()
+                    .name.equalTo(url)
+                            .findOne();
 
             assertThat(actualUrl).isNotNull();
-            assertThat(actualUrl.getString("name")).isEqualTo(url);
+            assertThat(actualUrl.getName()).isEqualTo(url);
 
-            Unirest.post(baseUrl + "/urls/" + actualUrl.getString("id") + "/checks")
+            Unirest.post(baseUrl + "/urls/" + actualUrl.getId() + "/checks")
                     .asEmpty();
 
             HttpResponse<String> response = Unirest
-                    .get(baseUrl + "/urls/" + actualUrl.getString("id"))
+                    .get(baseUrl + "/urls/" + actualUrl.getId())
                     .asString();
             String body = response.getBody();
 
             assertThat(response.getStatus()).isEqualTo(200);
             assertThat(body).contains("Страница успешно проверена");
 
-            String selectUrlCheck = String.format(
-                    "SELECT * FROM url_check WHERE url_id = '%s' ORDER BY created_at DESC;",
-                    actualUrl.getString("id")
-            );
-            SqlRow actualCheckUrl = DB.sqlQuery(selectUrlCheck).findOne();
+            UrlCheck actualCheckUrl = new QUrlCheck()
+                    .url.equalTo(actualUrl)
+                    .findOne()
+                    ;
 
             assertThat(actualCheckUrl).isNotNull();
-            assertThat(actualCheckUrl.getString("status_code")).isEqualTo("200");
-            assertThat(actualCheckUrl.getString("title")).isEqualTo("Title test");
-            assertThat(actualCheckUrl.getString("h1")).isEqualTo("h1 Test");
-            assertThat(actualCheckUrl.getString("description")).contains("description test");
+            assertThat(actualCheckUrl.getStatusCode()).isEqualTo(200);
+            assertThat(actualCheckUrl.getTitle()).isEqualTo("Title test");
+            assertThat(actualCheckUrl.getH1()).isEqualTo("h1 Test");
+            assertThat(actualCheckUrl.getDescription()).contains("description test");
         }
     }
 
