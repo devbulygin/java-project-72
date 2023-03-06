@@ -6,7 +6,6 @@ import hexlet.code.Models.UrlCheck;
 import hexlet.code.Models.query.QUrl;
 import hexlet.code.Models.query.QUrlCheck;
 import io.ebean.DB;
-import io.ebean.SqlRow;
 import io.ebean.Transaction;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
@@ -216,8 +215,7 @@ class AppTest {
 
             UrlCheck actualCheckUrl = new QUrlCheck()
                     .url.equalTo(actualUrl)
-                    .findOne()
-                    ;
+                    .findOne();
 
             assertThat(actualCheckUrl).isNotNull();
             assertThat(actualCheckUrl.getStatusCode()).isEqualTo(200);
